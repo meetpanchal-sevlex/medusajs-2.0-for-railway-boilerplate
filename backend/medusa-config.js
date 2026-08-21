@@ -79,7 +79,7 @@ const medusaConfig = {
             options: {
               clientId: GOOGLE_CLIENT_ID,
               clientSecret: GOOGLE_CLIENT_SECRET,
-              callbackUrl: `${AUTH_CORS}/api/auth/google/callback`
+              callbackUrl: `${AUTH_CORS.split(',')[0]}/api/auth/google/callback`
             }
           }
         ]
