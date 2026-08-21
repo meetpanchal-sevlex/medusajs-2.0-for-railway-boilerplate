@@ -41,7 +41,7 @@ const S3_REQUIRED_VARS = { S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_BUCKET, S3
 const S3_ENABLED = Object.values(S3_REQUIRED_VARS).every(Boolean);
 if (!S3_ENABLED && (S3_ENDPOINT || Object.values(S3_REQUIRED_VARS).some(Boolean))) {
   const missing = Object.entries(S3_REQUIRED_VARS).filter(([, value]) => !value).map(([name]) => name);
-  console.warn(\S3 file storage is only partially configured - missing: \. Falling back to local file storage, which is ephemeral on Railway!\);
+  console.warn(`S3 file storage is only partially configured - missing: ${missing.join(', ')}. Falling back to local file storage, which is ephemeral on Railway!`);
 }
 
 const medusaConfig = {
@@ -79,7 +79,7 @@ const medusaConfig = {
             options: {
               clientId: GOOGLE_CLIENT_ID,
               clientSecret: GOOGLE_CLIENT_SECRET,
-              callbackUrl: \\/auth/customer/google/callback\
+              callbackUrl: `${BACKEND_URL}/auth/customer/google/callback`
             }
           }
         ]
@@ -111,7 +111,7 @@ const medusaConfig = {
             id: 'local',
             options: {
               upload_dir: 'static',
-              backend_url: \\/static\
+              backend_url: `${BACKEND_URL}/static`
             }
           }])
         ]
