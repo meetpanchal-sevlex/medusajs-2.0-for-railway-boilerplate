@@ -1,4 +1,4 @@
-﻿import { loadEnv, Modules, defineConfig } from '@medusajs/utils';
+import { loadEnv, Modules, defineConfig } from '@medusajs/utils';
 import {
   ADMIN_CORS,
   AUTH_CORS,
@@ -79,7 +79,7 @@ const medusaConfig = {
             options: {
               clientId: GOOGLE_CLIENT_ID,
               clientSecret: GOOGLE_CLIENT_SECRET,
-              callbackUrl: `${BACKEND_URL}/auth/customer/google/callback`
+              callbackUrl: `${AUTH_CORS}/api/auth/google/callback`
             }
           }
         ]
