@@ -1,4 +1,4 @@
-import { loadEnv, Modules, defineConfig } from '@medusajs/utils';
+﻿import { loadEnv, Modules, defineConfig } from '@medusajs/utils';
 import {
   ADMIN_CORS,
   AUTH_CORS,
@@ -30,11 +30,18 @@ import {
 
 loadEnv(process.env.NODE_ENV, process.cwd());
 
+const RAZORPAY_ID = process.env.RAZORPAY_ID;
+const RAZORPAY_SECRET = process.env.RAZORPAY_SECRET;
+const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET;
+
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+
 const S3_REQUIRED_VARS = { S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, S3_BUCKET, S3_FILE_URL };
 const S3_ENABLED = Object.values(S3_REQUIRED_VARS).every(Boolean);
 if (!S3_ENABLED && (S3_ENDPOINT || Object.values(S3_REQUIRED_VARS).some(Boolean))) {
   const missing = Object.entries(S3_REQUIRED_VARS).filter(([, value]) => !value).map(([name]) => name);
-  console.warn(`S3 file storage is only partially configured - missing: ${missing.join(', ')}. Falling back to local file storage, which is ephemeral on Railway!`);
+  console.warn(\S3 file storage is only partially configured - missing: \. Falling back to local file storage, which is ephemeral on Railway!\);
 }
 
 const medusaConfig = {
@@ -61,6 +68,23 @@ const medusaConfig = {
     disable: SHOULD_DISABLE_ADMIN,
   },
   modules: [
+    ...(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET ? [{
+      key: Modules.AUTH,
+      resolve: '@medusajs/auth',
+      options: {
+        providers: [
+          {
+            resolve: '@medusajs/auth-google',
+            id: 'google',
+            options: {
+              clientId: GOOGLE_CLIENT_ID,
+              clientSecret: GOOGLE_CLIENT_SECRET,
+              callbackUrl: \\/auth/customer/google/callback\
+            }
+          }
+        ]
+      }
+    }] : []),
     {
       key: Modules.FILE,
       resolve: '@medusajs/file',
@@ -76,9 +100,6 @@ const medusaConfig = {
               region: S3_REGION,
               bucket: S3_BUCKET,
               endpoint: S3_ENDPOINT,
-              // false omits ACL headers - required by providers without ACL support
-              // (Railway buckets, Cloudflare R2, new AWS buckets); public read access
-              // is expected to come from a bucket policy in that case.
               acl: S3_ACL,
               download_file_duration: 24 * 60 * 60,
               additional_client_config: {
@@ -90,7 +111,7 @@ const medusaConfig = {
             id: 'local',
             options: {
               upload_dir: 'static',
-              backend_url: `${BACKEND_URL}/static`
+              backend_url: \\/static\
             }
           }])
         ]
@@ -138,19 +159,33 @@ const medusaConfig = {
         ]
       }
     }] : []),
-    ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [{
+    ...((STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET) || (RAZORPAY_ID && RAZORPAY_SECRET) ? [{
       key: Modules.PAYMENT,
       resolve: '@medusajs/payment',
       options: {
         providers: [
-          {
-            resolve: '@medusajs/payment-stripe',
-            id: 'stripe',
-            options: {
-              apiKey: STRIPE_API_KEY,
-              webhookSecret: STRIPE_WEBHOOK_SECRET,
-            },
-          },
+          ...(STRIPE_API_KEY && STRIPE_WEBHOOK_SECRET ? [
+            {
+              resolve: '@medusajs/payment-stripe',
+              id: 'stripe',
+              options: {
+                apiKey: STRIPE_API_KEY,
+                webhookSecret: STRIPE_WEBHOOK_SECRET,
+              },
+            }
+          ] : []),
+          ...(RAZORPAY_ID && RAZORPAY_SECRET ? [
+            {
+              resolve: '@devx-commerce/razorpay/providers/payment-razorpay',
+              id: 'razorpay',
+              options: {
+                key_id: RAZORPAY_ID,
+                key_secret: RAZORPAY_SECRET,
+                webhook_secret: RAZORPAY_WEBHOOK_SECRET,
+                auto_capture: true,
+              },
+            }
+          ] : [])
         ],
       },
     }] : [])
