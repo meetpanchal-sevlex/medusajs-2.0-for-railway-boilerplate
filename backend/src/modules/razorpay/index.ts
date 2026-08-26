@@ -8,26 +8,33 @@ class CustomRazorpayProvider extends AbstractPaymentProvider {
   
   constructor(_, options: any) {
     super(_, options)
+    const key_id = options?.key_id || process.env.RAZORPAY_ID || ""
+    const key_secret = options?.key_secret || process.env.RAZORPAY_SECRET || ""
     this.razorpay = new Razorpay({
-      key_id: options.key_id,
-      key_secret: options.key_secret
+      key_id: key_id,
+      key_secret: key_secret,
     })
   }
   
   async initiatePayment(input: any): Promise<any> {
     try {
-      // In Medusa 2.0, amount is often a BigNumber object. Convert to string first.
-      const amount = Math.round(Number(String(input.amount))) * 100
+      console.log("Razorpay initiatePayment called with input:", JSON.stringify(input, null, 2))
+      const rawAmount = input?.amount !== undefined ? input.amount : (input?.data?.amount || 0)
+      const amount = Math.round(Number(String(rawAmount))) * 100
+      const currency = (input?.currency_code || input?.data?.currency_code || "INR").toUpperCase()
       
       const order = await this.razorpay.orders.create({
-        amount: amount,
-        currency: input.currency_code?.toUpperCase() || "INR",
-        receipt: "receipt_" + Date.now()
+        amount: amount > 0 ? amount : 100,
+        currency: currency,
+        receipt: "rcpt_" + Date.now()
       })
+      
+      console.log("Razorpay Order Created Successfully:", order.id)
       
       return { 
         id: order.id, 
-        data: { id: order.id, ...order } 
+        data: { id: order.id, ...order },
+        status: "pending" as any
       }
     } catch (e: any) {
       console.error("Razorpay Initiate Error Details:", JSON.stringify(e, null, 2))
@@ -38,23 +45,71 @@ class CustomRazorpayProvider extends AbstractPaymentProvider {
   }
   
   async authorizePayment(input: any): Promise<any> {
-    return { data: input.data, status: "authorized" as any }
+    return { data: input?.data || {}, status: "authorized" as any }
   }
   
   async updatePayment(input: any): Promise<any> {
-    return { data: input.data }
+    return { data: input?.data || {} }
   }
   
   async cancelPayment(input: any): Promise<any> {
-    return { data: input.data }
+    return { data: input?.data || {} }
+  }
+  
+  async deletePayment(input: any): Promise<any> {
+    return { data: input?.data || {} }
   }
   
   async capturePayment(input: any): Promise<any> {
-    return { data: input.data }
+    return { data: input?.data || {} }
   }
   
   async refundPayment(input: any): Promise<any> {
-    return { data: input.data }
+    return { data: input?.data || {} }
+  }
+  
+  async getPaymentStatus(input: any): Promise<any> {
+    return { status: "authorized" as any }
+  }
+}
+
+class CustomManualProvider extends AbstractPaymentProvider {
+  static identifier = "manual"
+  
+  constructor(_, options: any) {
+    super(_, options)
+  }
+  
+  async initiatePayment(input: any): Promise<any> {
+    return {
+      id: "manual_" + Date.now(),
+      data: { id: "manual_" + Date.now() },
+      status: "pending" as any
+    }
+  }
+  
+  async authorizePayment(input: any): Promise<any> {
+    return { data: input?.data || {}, status: "authorized" as any }
+  }
+  
+  async updatePayment(input: any): Promise<any> {
+    return { data: input?.data || {} }
+  }
+  
+  async cancelPayment(input: any): Promise<any> {
+    return { data: input?.data || {} }
+  }
+  
+  async deletePayment(input: any): Promise<any> {
+    return { data: input?.data || {} }
+  }
+  
+  async capturePayment(input: any): Promise<any> {
+    return { data: input?.data || {} }
+  }
+  
+  async refundPayment(input: any): Promise<any> {
+    return { data: input?.data || {} }
   }
   
   async getPaymentStatus(input: any): Promise<any> {
@@ -63,5 +118,5 @@ class CustomRazorpayProvider extends AbstractPaymentProvider {
 }
 
 export default ModuleProvider(Modules.PAYMENT, {
-  services: [CustomRazorpayProvider],
+  services: [CustomRazorpayProvider, CustomManualProvider],
 })

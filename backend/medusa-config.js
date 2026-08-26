@@ -189,7 +189,12 @@ const medusaConfig = {
                 auto_capture: true,
               },
             }
-          ] : [])
+          ] : []),
+          {
+            resolve: './src/modules/razorpay',
+            id: 'manual',
+            options: {},
+          }
         ],
       },
     }] : [])
