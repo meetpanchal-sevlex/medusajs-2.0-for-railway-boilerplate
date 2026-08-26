@@ -21,7 +21,6 @@
     "email:dev": "email dev --dir=./src/modules/email-notifications/templates --port=3002"
   },
   "dependencies": {
-    "@devx-commerce/razorpay": "6.0.0-beta.0",
     "@medusajs/admin-sdk": "2.17.2",
     "@medusajs/admin-shared": "2.17.2",
     "@medusajs/auth-google": "^2.19.0",
@@ -36,7 +35,8 @@
     "@react-email/components": "^1.0.1",
     "@rokmohar/medusa-plugin-meilisearch": "1.4.3",
     "medusajs-launch-utils": "0.0.19",
-    "resend": "4.0.1"
+    "resend": "4.0.1",
+    "@sgftech/payment-razorpay": "^2.1.11"
   },
   "devDependencies": {
     "@medusajs/test-utils": "2.17.2",

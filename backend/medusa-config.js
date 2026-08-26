@@ -180,7 +180,7 @@ const medusaConfig = {
           ] : []),
           ...(RAZORPAY_ID && RAZORPAY_SECRET ? [
             {
-              resolve: '@devx-commerce/razorpay/providers/payment-razorpay',
+              resolve: '@sgftech/payment-razorpay',
               id: 'razorpay',
               options: {
                 key_id: RAZORPAY_ID,
@@ -221,3 +221,4 @@ const medusaConfig = {
 };
 
 export default defineConfig(medusaConfig);
+
