@@ -51,12 +51,12 @@ importers:
       '@rokmohar/medusa-plugin-meilisearch':
         specifier: 1.4.3
         version: 1.4.3(qm2v2ii5cswsapzesljvmhn2ee)
-      '@sgftech/payment-razorpay':
-        specifier: ^2.1.11
-        version: 2.1.11(sscanidrq5szvanxbqqdr6dwpq)
       medusajs-launch-utils:
         specifier: 0.0.19
         version: 0.0.19
+      razorpay:
+        specifier: ^2.9.8
+        version: 2.9.8
       resend:
         specifier: 4.0.1
         version: 4.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -4036,16 +4036,6 @@ packages:
   '@sendgrid/mail@8.1.6':
     resolution: {integrity: sha512-/ZqxUvKeEztU9drOoPC/8opEPOk+jLlB2q4+xpx6HVLq6aFu3pMpalkTpAQz8XfRfpLp8O25bh6pGPcHDCYpqg==}
     engines: {node: '>=12.*'}
-
-  '@sgftech/payment-razorpay@2.1.11':
-    resolution: {integrity: sha512-5d1DPZ1GQ6QqAJ0ehSQIDZh/inHZnqA0GcnFEW71bIJtYZNfZ9AZCNAqyZ5F4vTb/GOOjP5ZQBG+WeHxgVSohQ==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      '@medusajs/admin-sdk': latest
-      '@medusajs/cli': latest
-      '@medusajs/framework': ^2.0.0
-      '@medusajs/medusa': latest
-      awilix: ^8.0.1
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -13265,18 +13255,6 @@ snapshots:
     dependencies:
       '@sendgrid/client': 8.1.6
       '@sendgrid/helpers': 8.0.0
-    transitivePeerDependencies:
-      - debug
-      - supports-color
-
-  '@sgftech/payment-razorpay@2.1.11(sscanidrq5szvanxbqqdr6dwpq)':
-    dependencies:
-      '@medusajs/admin-sdk': 2.17.2
-      '@medusajs/cli': 2.17.2(@types/node@20.19.25)
-      '@medusajs/framework': 2.17.2(@medusajs/cli@2.17.2(@types/node@20.19.25))(@types/node@20.19.25)(ioredis@5.8.2)(vite@5.4.21(@types/node@20.19.25))(zod@4.2.0)
-      '@medusajs/medusa': 2.17.2(@medusajs/admin-sdk@2.17.2)(@medusajs/cli@2.17.2(@types/node@20.19.25))(@medusajs/dashboard@2.17.2(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(typescript@5.9.3))(@medusajs/framework@2.17.2(@medusajs/cli@2.17.2(@types/node@20.19.25))(@types/node@20.19.25)(ioredis@5.8.2)(vite@5.4.21(@types/node@20.19.25))(zod@4.2.0))(@medusajs/icons@2.17.2(react@18.3.1))(@medusajs/test-utils@2.17.2)(@medusajs/ui@4.1.19(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3))(@swc/core@1.5.7(@swc/helpers@0.5.17))(@types/node@20.19.25)(@types/react-dom@18.3.7(@types/react@18.3.27))(@types/react@18.3.27)(awilix@8.0.1)(picomatch@4.0.3)(posthog-node@4.18.0)(react-dom@18.3.1(react@18.3.1))(react-router-dom@6.30.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(yaml@2.8.0)
-      awilix: 8.0.1
-      razorpay: 2.9.8
     transitivePeerDependencies:
       - debug
       - supports-color
