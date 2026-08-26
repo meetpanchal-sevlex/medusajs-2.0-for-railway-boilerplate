@@ -31,9 +31,10 @@ class CustomRazorpayProvider extends AbstractPaymentProvider {
       
       console.log("Razorpay Order Created Successfully:", order.id)
       
+      const keyId = (this.razorpay as any)?.key_id || process.env.RAZORPAY_ID || ""
       return { 
         id: order.id, 
-        data: { id: order.id, ...order },
+        data: { id: order.id, key_id: keyId, ...order },
         status: "pending" as any
       }
     } catch (e: any) {
