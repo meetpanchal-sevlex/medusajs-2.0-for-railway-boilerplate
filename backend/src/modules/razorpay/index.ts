@@ -77,6 +77,34 @@ class CustomRazorpayProvider extends AbstractPaymentProvider {
     return { status: "authorized" as any }
   }
   
+  async createAccountHolder(input: any): Promise<any> {
+    return {
+      id: input?.context?.customer?.id || "acc_" + Date.now(),
+      data: input?.data || {}
+    }
+  }
+
+  async retrieveAccountHolder(input: any): Promise<any> {
+    return {
+      id: input?.id || "acc_" + Date.now(),
+      data: input?.data || {}
+    }
+  }
+
+  async updateAccountHolder(input: any): Promise<any> {
+    return {
+      id: input?.id || "acc_" + Date.now(),
+      data: input?.data || {}
+    }
+  }
+
+  async deleteAccountHolder(input: any): Promise<any> {
+    return {
+      id: input?.id || "acc_" + Date.now(),
+      data: input?.data || {}
+    }
+  }
+
   async getWebhookActionAndData(payload: any): Promise<any> {
     return {
       action: "not_supported",
@@ -135,6 +163,34 @@ class CustomManualProvider extends AbstractPaymentProvider {
     return { status: "authorized" as any }
   }
   
+  async createAccountHolder(input: any): Promise<any> {
+    return {
+      id: input?.context?.customer?.id || "acc_" + Date.now(),
+      data: input?.data || {}
+    }
+  }
+
+  async retrieveAccountHolder(input: any): Promise<any> {
+    return {
+      id: input?.id || "acc_" + Date.now(),
+      data: input?.data || {}
+    }
+  }
+
+  async updateAccountHolder(input: any): Promise<any> {
+    return {
+      id: input?.id || "acc_" + Date.now(),
+      data: input?.data || {}
+    }
+  }
+
+  async deleteAccountHolder(input: any): Promise<any> {
+    return {
+      id: input?.id || "acc_" + Date.now(),
+      data: input?.data || {}
+    }
+  }
+
   async getWebhookActionAndData(payload: any): Promise<any> {
     return {
       action: "not_supported",
