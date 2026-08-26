@@ -1,4 +1,4 @@
-import { ModuleProvider, Modules, PaymentSessionStatus } from "@medusajs/framework/utils"
+import { ModuleProvider, Modules } from "@medusajs/framework/utils"
 import { AbstractPaymentProvider } from "@medusajs/framework/utils"
 import Razorpay from "razorpay"
 
@@ -68,8 +68,22 @@ class CustomRazorpayProvider extends AbstractPaymentProvider {
     return { data: input?.data || {} }
   }
   
+  async retrievePayment(input: any): Promise<any> {
+    return { data: input?.data || {} }
+  }
+  
   async getPaymentStatus(input: any): Promise<any> {
     return { status: "authorized" as any }
+  }
+  
+  async getWebhookActionAndData(payload: any): Promise<any> {
+    return {
+      action: "not_supported",
+      data: {
+        session_id: "",
+        amount: 0
+      }
+    }
   }
 }
 
@@ -112,8 +126,22 @@ class CustomManualProvider extends AbstractPaymentProvider {
     return { data: input?.data || {} }
   }
   
+  async retrievePayment(input: any): Promise<any> {
+    return { data: input?.data || {} }
+  }
+  
   async getPaymentStatus(input: any): Promise<any> {
     return { status: "authorized" as any }
+  }
+  
+  async getWebhookActionAndData(payload: any): Promise<any> {
+    return {
+      action: "not_supported",
+      data: {
+        session_id: "",
+        amount: 0
+      }
+    }
   }
 }
 
