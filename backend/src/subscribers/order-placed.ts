@@ -7,27 +7,37 @@ export default async function orderPlacedHandler({
   event: { data },
   container,
 }: SubscriberArgs<any>) {
-  const notificationModuleService: INotificationModuleService = container.resolve(Modules.NOTIFICATION)
-  const orderModuleService: IOrderModuleService = container.resolve(Modules.ORDER)
-  
-  const order = await orderModuleService.retrieveOrder(data.id, { relations: ['items', 'summary', 'shipping_address'] })
-  const shippingAddress = await (orderModuleService as any).orderAddressService_.retrieve(order.shipping_address.id)
-
   try {
+    const notificationModuleService: INotificationModuleService = container.resolve(Modules.NOTIFICATION)
+    const orderModuleService: IOrderModuleService = container.resolve(Modules.ORDER)
+    
+    const order: any = await orderModuleService.retrieveOrder(data.id, { 
+      relations: ['items', 'summary', 'shipping_address'] 
+    })
+    
+    if (!order || !order.email) {
+      console.log(`[OrderPlacedNotification] No recipient email found for order ${data.id}`)
+      return
+    }
+
+    const shippingAddress = order.shipping_address || {}
+    const orderNumber = order.display_id || order.id.slice(-6)
+
     await notificationModuleService.createNotifications({
       to: order.email,
       channel: 'email',
       template: EmailTemplates.ORDER_PLACED,
       data: {
         emailOptions: {
-          replyTo: 'info@example.com',
-          subject: 'Your order has been placed'
+          replyTo: process.env.RESEND_FROM_EMAIL || 'support@laundrymall.in',
+          subject: `Order Confirmed #${orderNumber} - LaundryMall`
         },
         order,
         shippingAddress,
-        preview: 'Thank you for your order!'
+        preview: `Your LaundryMall order #${orderNumber} has been placed successfully!`
       }
     })
+    console.log(`[OrderPlacedNotification] Confirmation email queued for order #${orderNumber} to ${order.email}`)
   } catch (error) {
     console.error('Error sending order confirmation notification:', error)
   }
@@ -36,3 +46,4 @@ export default async function orderPlacedHandler({
 export const config: SubscriberConfig = {
   event: 'order.placed'
 }
+
