@@ -1,3 +1,12 @@
+import dns from 'node:dns';
+
+// Force Node.js to resolve IPv4 first, eliminating the 5-second glibc IPv6 DNS timeout in Railway
+try {
+  dns.setDefaultResultOrder('ipv4first');
+} catch (e) {
+  // Graceful fallback for older environments
+}
+
 import { loadEnv, Modules, defineConfig } from '@medusajs/utils';
 import {
   ADMIN_CORS,
