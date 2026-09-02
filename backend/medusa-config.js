@@ -127,15 +127,6 @@ const medusaConfig = {
       options: {
         redisUrl: REDIS_URL
       }
-    },
-    {
-      key: Modules.WORKFLOW_ENGINE,
-      resolve: '@medusajs/workflow-engine-redis',
-      options: {
-        redis: {
-          redisUrl: REDIS_URL,
-        }
-      }
     }] : []),
     ...(SENDGRID_API_KEY && SENDGRID_FROM_EMAIL || RESEND_API_KEY && RESEND_FROM_EMAIL ? [{
       key: Modules.NOTIFICATION,
