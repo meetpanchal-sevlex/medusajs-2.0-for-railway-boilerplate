@@ -31,8 +31,8 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       const paymentEntity = body?.payload?.payment?.entity;
       const rzpOrderId = paymentEntity?.order_id;
       
-      const query = req.scope.resolve("query");
-      const completeCartWorkflow = req.scope.resolve("completeCartWorkflow");
+      const query: any = req.scope.resolve("query");
+      const completeCartWorkflow: any = req.scope.resolve("completeCartWorkflow");
 
       // 1. Find the payment session matching the Razorpay Order ID
       const { data: paymentSessions } = await query.graph({
