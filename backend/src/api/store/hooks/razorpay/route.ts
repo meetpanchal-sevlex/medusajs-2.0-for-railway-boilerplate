@@ -23,12 +23,13 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
       return res.status(400).send("Invalid signature");
     }
 
-    const event = req.body.event;
+    const body = req.body as any;
+    const event = body?.event;
     console.log("Razorpay Webhook Received:", event);
     
     if (event === "payment.captured" || event === "order.paid") {
-      const paymentEntity = req.body.payload.payment.entity;
-      const rzpOrderId = paymentEntity.order_id;
+      const paymentEntity = body?.payload?.payment?.entity;
+      const rzpOrderId = paymentEntity?.order_id;
       
       const query = req.scope.resolve("query");
       const completeCartWorkflow = req.scope.resolve("completeCartWorkflow");
